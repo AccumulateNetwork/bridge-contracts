@@ -20,7 +20,8 @@ contract AccumulateBridge is Ownable {
     }
 
     function burn(WrappedToken token, string memory destination, uint256 amount) public virtual {
-        token.burnFrom(address(_msgSender()), amount);
+        token.transferFrom(address(msg.sender), address(this), amount);
+        token.burn(amount);
     }
 
 }
