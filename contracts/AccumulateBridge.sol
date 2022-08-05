@@ -327,30 +327,30 @@ contract AccumulateBridge is Ownable {
 
     constructor() {}
 
-    event LogTransferTokenOwnership(WrappedToken indexed _token, address indexed _newOwner);
-    event LogRenounceTokenOwnership(WrappedToken indexed _token);
-    event LogMint(WrappedToken indexed token, address indexed to, uint256 amount);
-    event LogBurn(WrappedToken indexed token, string indexed destination, uint256 amount);
+    event TransferTokenOwnership(WrappedToken indexed _token, address indexed _newOwner);
+    event RenounceTokenOwnership(WrappedToken indexed _token);
+    event Mint(WrappedToken token, address to, uint256 amount);
+    event Burn(WrappedToken token, string destination, uint256 amount);
 
     function transferTokenOwnership(WrappedToken token, address newOwner) public onlyOwner reentrancyGuard {
         token.transferOwnership(newOwner);
-        emit LogTransferTokenOwnership(token, newOwner);
+        emit TransferTokenOwnership(token, newOwner);
     }
 
     function renounceTokenOwnership(WrappedToken token) public onlyOwner reentrancyGuard {
         token.renounceOwnership();
-        emit LogRenounceTokenOwnership(token);
+        emit RenounceTokenOwnership(token);
     }
 
     function mint(WrappedToken token, address to, uint256 amount) public onlyOwner reentrancyGuard {
         token.mint(to, amount);
-        emit LogMint(token, to, amount);
+        emit Mint(token, to, amount);
     }
 
     function burn(WrappedToken token, string memory destination, uint256 amount) public virtual reentrancyGuard {
         token.safeTransferFrom(address(msg.sender), address(this), amount);
         token.burn(amount);
-        emit LogBurn(token, destination, amount);
+        emit Burn(token, destination, amount);
     }
 
 }
