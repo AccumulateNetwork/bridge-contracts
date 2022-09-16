@@ -318,12 +318,6 @@ contract AccumulateBridge is Ownable {
     using SafeERC20 for WrappedToken;
     
     bool internal locked;
-    modifier reentrancyGuard() {
-        require(!locked);
-        locked = true;
-        _;
-        locked = false;
-    }
 
     constructor() {}
 
@@ -332,22 +326,22 @@ contract AccumulateBridge is Ownable {
     event Mint(WrappedToken token, address to, uint256 amount);
     event Burn(WrappedToken token, string destination, uint256 amount);
 
-    function transferTokenOwnership(WrappedToken token, address newOwner) public onlyOwner reentrancyGuard {
+    function transferTokenOwnership(WrappedToken token, address newOwner) public onlyOwner {
         token.transferOwnership(newOwner);
         emit TransferTokenOwnership(token, newOwner);
     }
 
-    function renounceTokenOwnership(WrappedToken token) public onlyOwner reentrancyGuard {
+    function renounceTokenOwnership(WrappedToken token) public onlyOwner {
         token.renounceOwnership();
         emit RenounceTokenOwnership(token);
     }
 
-    function mint(WrappedToken token, address to, uint256 amount) public onlyOwner reentrancyGuard {
+    function mint(WrappedToken token, address to, uint256 amount) public onlyOwner {
         token.mint(to, amount);
         emit Mint(token, to, amount);
     }
 
-    function burn(WrappedToken token, string memory destination, uint256 amount) public virtual reentrancyGuard {
+    function burn(WrappedToken token, string memory destination, uint256 amount) public virtual {
         token.safeTransferFrom(address(msg.sender), address(this), amount);
         token.burn(amount);
         emit Burn(token, destination, amount);
