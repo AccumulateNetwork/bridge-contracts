@@ -316,8 +316,6 @@ library SafeERC20 {
 contract AccumulateBridge is Ownable {
 
     using SafeERC20 for WrappedToken;
-    
-    bool internal locked;
 
     constructor() {}
 
